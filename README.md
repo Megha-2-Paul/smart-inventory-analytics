@@ -55,13 +55,13 @@ day the generator is run, so date fields naturally move when regenerated later.
 
 ## Planned development
 
-1. Synthetic data generation and validation
-2. Data cleaning and inventory metrics
-3. Reorder alerts and stock classification
-4. Moving-average and advanced demand forecasting
-5. Streamlit analytics dashboard
+1. Synthetic data generation and validation — implemented
+2. Data cleaning and inventory metrics — implemented
+3. Reorder alerts and stock classification — implemented
+4. Moving-average and Random Forest demand forecasting — implemented
+5. Streamlit analytics dashboard — next
 6. Excel, CSV and PDF reporting
-7. Tests, documentation and deployment
+7. Expanded tests, documentation and deployment
 
 ## Modelling note
 
