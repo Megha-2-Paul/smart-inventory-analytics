@@ -61,7 +61,7 @@ Calendar dates are relative to the run date, so they naturally shift when regene
 5. **Supplier analytics** — purchase value, delivery timing and supplier rating.
 6. **Reports** — downloadable multi-sheet Excel workbook and PDF executive summary.
 
-The app validates required columns and product, supplier and warehouse relationships before showing analytics. Generate the CSVs before starting Streamlit.
+The app validates required columns and product, supplier and warehouse relationships before showing analytics. If the six CSV files are missing on first launch, the app generates the synthetic demo datasets automatically. You can also generate them manually with the command above.
 
 ## Run automated tests
 
@@ -76,7 +76,7 @@ GitHub Actions runs the test suite on pushes and pull requests to `main`, using 
 1. Push the repository to GitHub and ensure the default branch is `main`.
 2. Open Streamlit Community Cloud and connect your GitHub account.
 3. Create an app using this repository, branch `main` and main file path `app.py`.
-4. Deploy the app. The dashboard expects generated CSV files under `data/raw/`; if the files are not committed, add a build/start step supported by your hosting platform or generate and commit the synthetic CSVs before deployment.
+4. Deploy the app. On first launch, the dashboard generates the six synthetic CSV files under `data/raw/` if they are not already present.
 5. After deployment, open each page and verify the KPI values, filters, forecast charts and report downloads.
 
 No API keys or secrets are required for the current synthetic-data version.
