@@ -42,5 +42,5 @@ c.metric("Random Forest holdout MAE","N/A" if mae is None else f"{mae:.2f} units
 st.plotly_chart(px.line(plot_data,x="date",y="units",color="series"),use_container_width=True)
 st.subheader("Forecast values")
 comparison=baseline.merge(advanced,on="date",suffixes=("_moving_average","_random_forest"))
-st.dataframe(comparison.round(2),use_container_width=True,hide_index=True)
+st.dataframe(comparison.round({"forecast_demand_moving_average": 2, "forecast_demand_random_forest": 2}),use_container_width=True,hide_index=True)
 st.caption("Forecasts are estimates trained on synthetic sales history. Holdout MAE is a historical evaluation metric, not a guarantee of future accuracy.")
