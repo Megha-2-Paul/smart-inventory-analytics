@@ -3,14 +3,16 @@ from __future__ import annotations
 
 import streamlit as st
 
-from src.data_cleaning import clean_datasets, load_datasets
+from src.data_cleaning import clean_datasets, load_datasets, validate_relationships
 from src.inventory_metrics import build_inventory_position
 
 
-@st.cache_data(show_spinner="Loading inventory data...")
+@st.cache_data(show_spinner="Loading and validating inventory data...")
 def get_data() -> dict:
-    """Load, clean and cache all generated datasets."""
-    return clean_datasets(load_datasets())
+    """Load, clean, validate and cache all generated datasets."""
+    datasets = clean_datasets(load_datasets())
+    validate_relationships(datasets)
+    return datasets
 
 
 def get_inventory_position(data: dict):
