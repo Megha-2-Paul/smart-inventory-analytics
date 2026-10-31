@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 import plotly.express as px
 from src.dashboard_utils import get_data
 
@@ -12,7 +13,7 @@ except FileNotFoundError as exc:
 
 suppliers=data["suppliers"]
 orders=data["purchase_orders"].copy()
-orders["order_date"]=__import__("pandas").to_datetime(orders["order_date"])
+orders["order_date"]=pd.to_datetime(orders["order_date"])
 orders["expected_delivery_date"]=__import__("pandas").to_datetime(orders["expected_delivery_date"])
 orders["actual_delivery_date"]=__import__("pandas").to_datetime(orders["actual_delivery_date"])
 delivered=orders.loc[orders["status"]=="Delivered"].copy()
