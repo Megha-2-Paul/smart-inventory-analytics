@@ -63,6 +63,26 @@ day the generator is run, so date fields naturally move when regenerated later.
 6. Excel, CSV and PDF reporting
 7. Expanded tests, documentation and deployment
 
+## Dashboard pages
+
+- Executive overview: headline KPIs, inventory health and category revenue
+- Inventory explorer: product search, category, warehouse and stock-status filters
+- Stock alerts: configurable demand lookback, safety stock and target stock cover
+- Demand forecasting: moving-average and Random Forest forecast comparison
+- Supplier analytics: purchase value, delivery timing and supplier rating
+- Reports: downloadable multi-sheet Excel workbook and PDF executive summary
+
+## Run the application
+
+```powershell
+python -m src.data_generator
+streamlit run app.py
+```
+
+The Streamlit sidebar provides navigation between the pages. The Reports page
+creates Excel and PDF files in memory for download; it does not write report
+files to the repository.
+
 ## Modelling note
 
 Initial inventory snapshots and historical sales are generated independently.
