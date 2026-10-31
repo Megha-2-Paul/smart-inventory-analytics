@@ -82,10 +82,10 @@ def random_forest_forecast(
         result = pd.DataFrame(index=data.index)
         for lag in range(1, lags + 1):
             result[f"lag_{lag}"] = data["demand"].shift(lag)
-        result["day_of_week"] = data["date"].dt.dayofweek
+        result["day_of_week"] = data["date"].dt.day_of_week
         result["day_of_month"] = data["date"].dt.day
         result["month"] = data["date"].dt.month
-        result["is_weekend"] = (data["date"].dt.dayofweek >= 5).astype(int)
+        result["is_weekend"] = (data["date"].dt.day_of_week >= 5).astype(int)
         return result
 
     features = make_features(frame)
@@ -109,16 +109,17 @@ def random_forest_forecast(
     model.fit(X, y)
 
     history = frame[["date", "demand"]].copy()
+    history["demand"] = history["demand"].astype(float)
     output = []
     for _ in range(horizon):
         next_date = history["date"].iloc[-1] + pd.Timedelta(days=1)
         row = {}
         for lag in range(1, lags + 1):
             row[f"lag_{lag}"] = float(history["demand"].iloc[-lag])
-        row["day_of_week"] = next_date.dayofweek
+        row["day_of_week"] = next_date.day_of_week
         row["day_of_month"] = next_date.day
         row["month"] = next_date.month
-        row["is_weekend"] = int(next_date.dayofweek >= 5)
+        row["is_weekend"] = int(next_date.day_of_week >= 5)
         prediction = max(0.0, float(model.predict(pd.DataFrame([row]))[0]))
         output.append({"date": next_date, "forecast_demand": prediction})
         history.loc[len(history)] = [next_date, prediction]
