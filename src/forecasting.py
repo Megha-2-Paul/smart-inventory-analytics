@@ -112,7 +112,7 @@ def random_forest_forecast(
     output = []
     for _ in range(horizon):
         next_date = history["date"].iloc[-1] + pd.Timedelta(days=1)
-        row = {"date": next_date}
+        row = {}
         for lag in range(1, lags + 1):
             row[f"lag_{lag}"] = float(history["demand"].iloc[-lag])
         row["day_of_week"] = next_date.dayofweek
