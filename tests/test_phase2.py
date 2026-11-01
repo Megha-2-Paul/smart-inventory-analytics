@@ -62,3 +62,53 @@ def test_forecasting_outputs_requested_horizon():
     assert (baseline["forecast_demand"] >= 0).all()
     assert (advanced["forecast_demand"] >= 0).all()
     assert mae is None or mae >= 0
+
+
+def test_zero_demand_does_not_create_reorder_when_stock_is_available():
+    products, inventory, sales = sample_frames()
+    sales["status"] = "Cancelled"
+    position = build_inventory_position(inventory, products)
+
+    result = calculate_reorder_recommendations(
+        position, sales, lookback_days=30, as_of="2025-02-09"
+    )
+
+    assert result.loc[0, "average_daily_demand"] == 0
+    assert result.loc[0, "reorder_point"] == 0
+    assert result.loc[0, "recommended_order_qty"] == 0
+
+
+def test_out_of_stock_position_is_marked_critical():
+    products, inventory, sales = sample_frames()
+    inventory.loc[0, "current_stock"] = 1
+    inventory.loc[0, "reserved_stock"] = 1
+    inventory.loc[0, "damaged_stock"] = 0
+    sales["status"] = "Cancelled"
+    position = build_inventory_position(inventory, products)
+
+    result = calculate_reorder_recommendations(
+        position, sales, lookback_days=30, as_of="2025-02-09"
+    )
+
+    assert result.loc[0, "available_stock"] == 0
+    assert result.loc[0, "alert_level"] == "Critical - out of stock"
+
+
+def test_daily_demand_respects_warehouse_filter():
+    _, _, sales = sample_frames()
+    second_warehouse = sales.copy()
+    second_warehouse["warehouse_id"] = "WH00002"
+    second_warehouse["quantity"] = 5
+    combined = pd.concat([sales, second_warehouse], ignore_index=True)
+
+    first = daily_product_demand(
+        combined, "PRD00001", warehouse_id="WH00001",
+        end_date="2025-02-09", history_days=40,
+    )
+    second = daily_product_demand(
+        combined, "PRD00001", warehouse_id="WH00002",
+        end_date="2025-02-09", history_days=40,
+    )
+
+    assert first["demand"].sum() == 80
+    assert second["demand"].sum() == 200
